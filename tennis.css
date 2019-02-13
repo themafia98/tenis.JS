@@ -1,0 +1,29 @@
+.container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+
+}
+
+
+.poly {
+    background-color: yellow;
+    border: 1px solid transparent;
+    border-color: black;
+    position: relative;
+}
+
+.greenPlayer {
+    background-color: green;
+    position: absolute;
+}
+
+.bluePlayer {
+    background-color: blue;
+    position: absolute;
+}
+
+.ball {
+    background-color: red;
+    position: absolute;
+}

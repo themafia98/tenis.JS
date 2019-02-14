@@ -1,5 +1,5 @@
 
-
+debugger;
     const polygon = {
         width: 1140,
         height: 600
@@ -34,18 +34,14 @@
         width: 60,
         height: 60,
         radius: 60,
-        coordsX: function(){
-           let x = polygon.width / 2 + 'px';
-            return x;
-        },
-        coordsY: function(){
-            let y = polygon.height / 2 + 'px';
-            return y;
-        },
+        speed: 5,
+        coordsX:  parseInt(polygon.width / 2),
+        coordsY: parseInt(polygon.height / 2),
         move: function (type) {
             let ball = type.querySelector('.ball');
-            ball.style.left = ballObj.coordsX();
-            ball.style.top = ballObj.coordsY();
+
+            ball.style.left = ballObj.coordsX + 'px';
+            ball.style.top = ballObj.coordsY + 'px';
         }
     };
 
@@ -126,35 +122,34 @@
     }
 
 
-
-
     createDOMelement();
 
 
     function start() {
-        setInterval(time,40);
+        requestAnimationFrame(time);
     }
 
     function time() {
-        let balls = document.querySelector('.ball');
+        debugger;
 
-        let a = parseInt(balls.style.left);
-        console.log(a);
-        console.log(polygon.width);
+        let x = parseFloat(ballObj.coordsX);
+        x += ballObj.speed;
 
-        if (a > polygon.width-ballObj.width-5) {
-            a = a - 5;
-            balls.style.left = a + 'px';
+        ballObj.coordsX = x;
+
+        if (ballObj.coordsX === polygon.width - ballObj.width + 5) {
+            debugger;
+            console.log('gg');
+            return ballObj.coordsX = 0;
         }
 
-        if (a < 0) {
-            a = a + 5;
-            balls.style.left = a + 'px';
-        }
 
-        a = a + 5;
-        balls.style.left = a + 'px';
+
+        ballObj.move(document);
+
+        requestAnimationFrame(time);
     }
 
-    start();
-    
+    ballObj.move(document);
+
+

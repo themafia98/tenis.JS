@@ -16,11 +16,13 @@
 .greenPlayer {
     background-color: green;
     position: absolute;
+    z-index: 1;
 }
 
 .bluePlayer {
     background-color: blue;
     position: absolute;
+    z-index: 1;
 }
 
 .ball {

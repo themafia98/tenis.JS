@@ -1,4 +1,8 @@
 
+    let saveX = null;
+    let saveY = null;
+
+
     const polygon = {
         width: 1140,
         height: 600
@@ -26,6 +30,7 @@
             let player = type.querySelector('.bluePlayer');
             player.style.left = bluePlayer.coordsX();
             player.style.top = bluePlayer.coordsY;
+
         }
     };
 
@@ -34,13 +39,19 @@
         height: 60,
         radius: 60,
         speed: 5,
+        speedY: 5,
         coordsX:  parseInt(polygon.width / 2),
         coordsY: parseInt(polygon.height / 2),
         move: function (type) {
+            let that = this;
             let ball = type.querySelector('.ball');
+             saveX =  ballObj.coordsX;
+             saveY = ballObj.coordsY;
 
-            ball.style.left = ballObj.coordsX + 'px';
-            ball.style.top = ballObj.coordsY + 'px';
+            ball.style.left = ballObj.coordsX + that.speedY + 'px';
+            ball.style.top = ballObj.coordsY + that.speed  + 'px';
+            saveX = parseFloat(ball.style.left);
+            saveY = parseFloat(ball.style.top);
         }
     };
 
@@ -89,34 +100,35 @@
             let player2 = document.querySelector('.bluePlayer');
 
             if (e.shiftKey) {
-                player.style.top = parseInt(player.style.top) - 9 + 'px';
+                player.style.top = parseInt(player.style.top) - 15 + 'px';
                 if (parseInt(player.style.top) < 0) {
                     player.style.top = 0 + 'px';
                 }
             }
             if (e.ctrlKey) {
-                player.style.top = parseInt(player.style.top) + 9 + 'px';
+                player.style.top = parseInt(player.style.top) + 15 + 'px';
                 if (parseInt(player.style.top) > 450) {
                     player.style.top = 450 + 'px';
                 }
             }
 
             if (e.keyCode === 38) {
-                player2.style.top = parseInt(player2.style.top) - 9 + 'px';
+                player2.style.top = parseInt(player2.style.top) - 15 + 'px';
                 if (parseInt(player2.style.top) < 0) {
                     player2.style.top = 0 + 'px';
                 }
             }
 
             if (e.keyCode === 40) {
-                player2.style.top = parseInt(player2.style.top) + 9 + 'px';
+                player2.style.top = parseInt(player2.style.top) + 15 + 'px';
                 if (parseInt(player2.style.top) > 450) {
                     player2.style.top = 450 + 'px';
                 }
             }
 
-            console.log(e.keyCode);
         }
+
+        requestAnimationFrame(down);
 
     }
 
@@ -125,29 +137,67 @@
 
 
     function start() {
+      //  let random = (getRandomArbitary(-1,1));
+       // ballObj.speed =  ballObj.speed * random;
+       // ballObj.speedY =  ballObj.speedY * random;
         requestAnimationFrame(time);
     }
 
+    function getRandomArbitary(min, max)
+    {
+        let random = Math.floor((Math.random() * (max - min) + min).toFixed(3));
+
+        console.log(random);
+        return random;
+    }
+
     function time() {
- 
 
-        let x = parseFloat(ballObj.coordsX);
-        x += ballObj.speed;
+        let blue = document.querySelector('.bluePlayer');
+        let green = document.querySelector('.greenPlayer');
+        let ball = document.querySelector('.ball');
 
-        ballObj.coordsX = x;
-
-        if (ballObj.coordsX === polygon.width - ballObj.width + 5) {
-            debugger;
-            console.log('gg');
-            return ballObj.coordsX = 0;
+        if (ballObj.coordsX >= polygon.width-80 && ballObj.coordsY >= parseInt(blue.style.top) && ballObj.coordsY <=
+            parseInt(blue.style.top)+bluePlayer.height ) {
+            ballObj.speedY = -ballObj.speedY;
         }
 
+        if (ballObj.coordsX + ballObj.width > polygon.width) {
+            ball.style.display = 'none';
+            return;
+        }
+
+        if (ballObj.coordsX === 25 && ballObj.coordsY >= parseInt(green.style.top)
+            && ballObj.coordsY <= parseInt(green.style.top)+greenPlayer.height ) {
+            ballObj.speedY = -ballObj.speedY;
+        }
+
+        if (ballObj.coordsX === 0) {
+            ballObj.speedY = -ballObj.speedY;
+            ball.style.display = 'none';
+            return;
+        }
+
+
+        if (ballObj.coordsY + ballObj.width > polygon.height) {
+            ballObj.speed = -ballObj.speed;
+        }
+
+        if (ballObj.coordsY  === 0) {
+
+            ballObj.speed = -ballObj.speed ;
+        }
 
 
         ballObj.move(document);
 
+        ballObj.coordsX  = saveX;
+        ballObj.coordsY = saveY ;
+
+
         requestAnimationFrame(time);
     }
+
 
     ballObj.move(document);
 

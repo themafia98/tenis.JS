@@ -1,5 +1,4 @@
 
-debugger;
     const polygon = {
         width: 1140,
         height: 600
@@ -130,7 +129,7 @@ debugger;
     }
 
     function time() {
-        debugger;
+ 
 
         let x = parseFloat(ballObj.coordsX);
         x += ballObj.speed;

@@ -11,8 +11,8 @@
     const greenPlayer = {
         width: 30 ,
         height: 150,
-        coordsX: 0,
         coordsY: 0,
+        pointsGreen: 0,
         move: function (type) {
             let player = type.querySelector('.greenPlayer');
             player.style.top = greenPlayer.coordsY;
@@ -23,6 +23,7 @@
         width: 30,
         height: 150,
         coordsY: 0,
+        pointsBlue: 0,
         coordsX: function () {
             return polygon.width - greenPlayer.width + 'px';
         },
@@ -38,8 +39,15 @@
         width: 60,
         height: 60,
         radius: 60,
+        constSpeed: 5,
         speed: 5,
         speedY: 5,
+        startX: 0,
+        startY: 0,
+        restart: function () {
+            ballObj.startX = parseInt(polygon.width / 2);
+            ballObj.startY = parseInt(polygon.height / 2);
+        },
         coordsX:  parseInt(polygon.width / 2),
         coordsY: parseInt(polygon.height / 2),
         move: function (type) {
@@ -59,11 +67,25 @@
     function createDOMelement() {
 
         const container = document.querySelector('.container');
+        const input = document.createElement('input');
+        const info = document.createElement('p');
+        const pointBox = document.createElement('div');
+        const pointInfo = document.createElement('p');
+        pointBox.classList.add('goals');
+        info.classList.add('info');
+        pointInfo.classList.add('aboutPoint');
+        info.innerHTML = 'After the goal, click on the playing field to continue the game.';
+        pointInfo.innerHTML = 'Green points: <span data-GreenPoint = "">0</span> | Blue points: ' +
+            '<span data-BluePoint = "">0</span>';
+        input.classList.add('set');
+        input.type = 'button';
+        input.value = 'START GAME';
         const poly = document.createElement('div');
         const ball = document.createElement('div');
         const green = document.createElement('div');
         const blue = document.createElement('div');
         document.addEventListener('keydown', down);
+        input.addEventListener('click',start);
 
 
         poly.classList.add('poly');
@@ -87,9 +109,13 @@
         poly.appendChild(blue);
         poly.appendChild(ball);
 
+        container.appendChild(pointBox);
+        pointBox.appendChild(pointInfo);
         container.appendChild(poly);
+        container.appendChild(info);
+        container.appendChild(input);
 
-        poly.addEventListener('click',start);
+        poly.addEventListener('click',restart);
 
         greenPlayer.move(document);
         bluePlayer.move(document);
@@ -128,8 +154,6 @@
 
         }
 
-        requestAnimationFrame(down);
-
     }
 
 
@@ -137,25 +161,35 @@
 
 
     function start() {
-      //  let random = (getRandomArbitary(-1,1));
-       // ballObj.speed =  ballObj.speed * random;
-       // ballObj.speedY =  ballObj.speedY * random;
+        let random = getRandom();
+        debugger;
+        document.querySelector('.set').disabled = true;
+        ballObj.speed = ballObj.speed * random;
+        ballObj.speedY = ballObj.speedY * random;
         requestAnimationFrame(time);
     }
 
-    function getRandomArbitary(min, max)
+    function getRandom()
     {
-        let random = Math.floor((Math.random() * (max - min) + min).toFixed(3));
-
-        console.log(random);
-        return random;
+        let arr = [-1,1];
+        let rand = Math.floor(Math.random() * arr.length);
+        return arr[rand];
     }
+
+
+    function restart() {
+        let random = getRandom();
+        ballObj.speed = ballObj.constSpeed * random;
+        ballObj.speedY = ballObj.constSpeed * random;
+    };
+
 
     function time() {
 
         let blue = document.querySelector('.bluePlayer');
         let green = document.querySelector('.greenPlayer');
         let ball = document.querySelector('.ball');
+        const poly = document.createElement('div');
 
         if (ballObj.coordsX >= polygon.width-80 && ballObj.coordsY >= parseInt(blue.style.top) && ballObj.coordsY <=
             parseInt(blue.style.top)+bluePlayer.height ) {
@@ -163,8 +197,16 @@
         }
 
         if (ballObj.coordsX + ballObj.width > polygon.width) {
-            ball.style.display = 'none';
-            return;
+
+            greenPlayer.pointsGreen = greenPlayer.pointsGreen+1;
+            console.log('Green points:' + greenPlayer.pointsGreen);
+            ballObj.restart();
+            ballObj.coordsX =  ballObj.startX;
+            ballObj.coordsY = ballObj.startY;
+            ballObj.speed = 0;
+            ballObj.speedY = 0;
+            ball.style.left = ballObj.startX + 'px';
+            ball.style.top = ballObj.startY + 'px';
         }
 
         if (ballObj.coordsX === 25 && ballObj.coordsY >= parseInt(green.style.top)
@@ -173,9 +215,15 @@
         }
 
         if (ballObj.coordsX === 0) {
-            ballObj.speedY = -ballObj.speedY;
-            ball.style.display = 'none';
-            return;
+            bluePlayer.pointsBlue = bluePlayer.pointsBlue+1;
+            console.log('Blue points:' +bluePlayer.pointsBlue);
+            ballObj.restart();
+            ballObj.coordsX =  ballObj.startX;
+            ballObj.coordsY = ballObj.startY;
+            ballObj.speed = 0;
+            ballObj.speedY = 0;
+            ball.style.left = ballObj.startX + 'px';
+            ball.style.top = ballObj.startY + 'px';
         }
 
 
@@ -184,7 +232,6 @@
         }
 
         if (ballObj.coordsY  === 0) {
-
             ballObj.speed = -ballObj.speed ;
         }
 
@@ -193,7 +240,6 @@
 
         ballObj.coordsX  = saveX;
         ballObj.coordsY = saveY ;
-
 
         requestAnimationFrame(time);
     }

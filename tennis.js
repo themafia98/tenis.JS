@@ -42,8 +42,6 @@
         constSpeed: 5,
         speed: 5,
         speedY: 5,
-        startX: 0,
-        startY: 0,
         restart: function () {
             ballObj.startX = parseInt(polygon.width / 2);
             ballObj.startY = parseInt(polygon.height / 2);
@@ -77,6 +75,8 @@
         info.innerHTML = 'After the goal, click on the playing field to continue the game.';
         pointInfo.innerHTML = 'Green points: <span data-GreenPoint = "">0</span> | Blue points: ' +
             '<span data-BluePoint = "">0</span>';
+        pointInfo.dataset.GreenPoint = greenPlayer.pointsGreen;
+        pointInfo.dataset.BluePoint = bluePlayer.pointsBlue;
         input.classList.add('set');
         input.type = 'button';
         input.value = 'START GAME';
@@ -162,7 +162,6 @@
 
     function start() {
         let random = getRandom();
-        debugger;
         document.querySelector('.set').disabled = true;
         ballObj.speed = ballObj.speed * random;
         ballObj.speedY = ballObj.speedY * random;
@@ -189,10 +188,12 @@
         let blue = document.querySelector('.bluePlayer');
         let green = document.querySelector('.greenPlayer');
         let ball = document.querySelector('.ball');
+        let pointBlue = document.querySelector('[data-BluePoint');
+        let pointGreen = document.querySelector('[data-GreenPoint');
         const poly = document.createElement('div');
 
-        if (ballObj.coordsX >= polygon.width-80 && ballObj.coordsY >= parseInt(blue.style.top) && ballObj.coordsY <=
-            parseInt(blue.style.top)+bluePlayer.height ) {
+        if (ballObj.coordsX >= polygon.width-80 && ballObj.coordsY >= parseInt(blue.style.top) &&
+            ballObj.coordsY <= parseInt(blue.style.top)+bluePlayer.height ) {
             ballObj.speedY = -ballObj.speedY;
         }
 
@@ -200,6 +201,7 @@
 
             greenPlayer.pointsGreen = greenPlayer.pointsGreen+1;
             console.log('Green points:' + greenPlayer.pointsGreen);
+            pointGreen.innerHTML = greenPlayer.pointsGreen;
             ballObj.restart();
             ballObj.coordsX =  ballObj.startX;
             ballObj.coordsY = ballObj.startY;
@@ -217,6 +219,7 @@
         if (ballObj.coordsX === 0) {
             bluePlayer.pointsBlue = bluePlayer.pointsBlue+1;
             console.log('Blue points:' +bluePlayer.pointsBlue);
+            pointBlue.innerHTML = bluePlayer.pointsBlue;
             ballObj.restart();
             ballObj.coordsX =  ballObj.startX;
             ballObj.coordsY = ballObj.startY;
@@ -245,6 +248,6 @@
     }
 
 
-    ballObj.move(document);
+
 
 

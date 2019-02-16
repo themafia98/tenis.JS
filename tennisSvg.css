@@ -5,26 +5,6 @@
 
 }
 
-
-.poly {
-
-    position: relative;
-}
-
-.greenPlayer {
-    background-color: green;
-    position: absolute;
-}
-
-.bluePlayer {
-    background-color: blue;
-    position: absolute;
-}
-
-.ball {
-    position: absolute;
-}
-
 .set {
     display: block;
     width: 100px;
@@ -45,7 +25,7 @@
 }
 
 .aboutPoint {
-    font-size: 20px;
-    text-weight: 900;
+    font-size: 25px;
+    font-weight: 900;
     text-align: center;
 }

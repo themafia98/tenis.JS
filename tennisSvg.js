@@ -3,7 +3,6 @@
     let saveY = null;
     let frame = null;
 
-
     const polygon = {
         width: 1140,
         height: 600
@@ -16,7 +15,7 @@
         pointsGreen: 0,
         move: function (type) {
             let player = type.querySelector('.greenPlayer');
-            player.style.top = greenPlayer.coordsY;
+            player.attributes.y.value = greenPlayer.coordsY;
         }
     };
 
@@ -30,8 +29,8 @@
         },
         move: function (type) {
             let player = type.querySelector('.bluePlayer');
-            player.style.left = bluePlayer.coordsX();
-            player.style.top = bluePlayer.coordsY;
+            player.attributes.x.value = bluePlayer.coordsX();
+            player.attributes.y.value = bluePlayer.coordsY;
 
         }
     };
@@ -52,7 +51,6 @@
             let ball = type.querySelector('.ball');
              saveX =  ballObj.coordsX;
              saveY = ballObj.coordsY;
-            debugger;
             ball.attributes.cx.value = ballObj.coordsX + that.speedY + 'px';
             ball.attributes.cy.value = ballObj.coordsY + that.speed  + 'px';
             saveX = parseFloat(ball.attributes.cx.value);
@@ -60,8 +58,7 @@
         }
     };
 
-
-    function createDOMelement() {
+    function createSVGelement() {
 
         const container = document.querySelector('.container');
         const input = document.createElement('input');
@@ -77,14 +74,12 @@
         info.classList.add('info');
         pointInfo.classList.add('aboutPoint');
         info.innerHTML = 'After the goal, click on the playing field to continue the game.';
-        pointInfo.innerHTML = 'Green points: <span data-GreenPoint = "">0</span> | Blue points: ' +
-            '<span data-BluePoint = "">0</span>';
+        pointInfo.innerHTML = '<span data-GreenPoint = "">0</span> : ' + '<span data-BluePoint = "">0</span>';
         pointInfo.dataset.GreenPoint = greenPlayer.pointsGreen;
         pointInfo.dataset.BluePoint = bluePlayer.pointsBlue;
         input.classList.add('set');
         input.type = 'button';
         input.value = 'START GAME';
-
 
         const poly = document.createElementNS(svgNS, 'rect');
         poly.classList.add('poly');
@@ -94,10 +89,6 @@
         poly.setAttribute('height',polygon.height);
         poly.setAttribute('stroke','black');
         poly.setAttribute('fill','yellow');
-
-
-
-        console.log(poly);
 
         const ball = document.createElementNS(svgNS,'circle');
         ball.classList.add('ball');
@@ -110,21 +101,22 @@
         green.classList.add('greenPlayer');
         green.setAttribute('width',greenPlayer.width);
         green.setAttribute('height',greenPlayer.height);
+        green.setAttribute('stroke','black');
         green.setAttribute('fill', 'green');
         green.setAttribute('x', '0');
         green.setAttribute('y',greenPlayer.coordsY);
 
-        const blue = document.createElementNS(svgNS,'react');
+        const blue = document.createElementNS(svgNS,'rect');
+        blue.classList.add('bluePlayer');
+        blue.setAttribute('width',bluePlayer.width);
+        blue.setAttribute('height',bluePlayer.height);
+        blue.setAttribute('stroke','black');
+        blue.setAttribute('fill','blue');
+        blue.setAttribute('x',bluePlayer.coordsX());
+        blue.setAttribute('y',bluePlayer.coordsY);
+
         document.addEventListener('keydown', down);
         input.addEventListener('click',start);
-
-
-
-
-
-        blue.classList.add('bluePlayer');
-
-
 
         svg.appendChild(poly);
         svg.appendChild(green);
@@ -143,37 +135,44 @@
         bluePlayer.move(document);
         ballObj.move(document);
 
-
         function down(e) {
-            let player = document.querySelector('.greenPlayer');
-            let player2 = document.querySelector('.bluePlayer');
 
             if (e.shiftKey) {
-                player.style.top = parseInt(player.style.top) - 15 + 'px';
-                if (parseInt(player.style.top) < 0) {
-                    player.style.top = 0 + 'px';
+                if (parseInt(greenPlayer.coordsY) <= 0) {
+                    greenPlayer.coordsY = 0;
+                } else {
+                    greenPlayer.coordsY = greenPlayer.coordsY - 15;
+                    greenPlayer.move(document);
                 }
             }
             if (e.ctrlKey) {
-                player.style.top = parseInt(player.style.top) + 15 + 'px';
-                if (parseInt(player.style.top) > 450) {
-                    player.style.top = 450 + 'px';
+                if (parseInt( greenPlayer.coordsY) > 435) {
+                    greenPlayer.coordsY = 435;
+                } else {
+                    greenPlayer.coordsY = parseInt(greenPlayer.coordsY) + 15;
+                    greenPlayer.move(document);
                 }
             }
 
             if (e.keyCode === 38) {
-                player2.style.top = parseInt(player2.style.top) - 15 + 'px';
-                if (parseInt(player2.style.top) < 0) {
-                    player2.style.top = 0 + 'px';
+                if (parseInt(bluePlayer.coordsY) <= 0) {
+                    bluePlayer.coordsY = 0;
+                } else {
+                    bluePlayer.coordsY = parseInt(bluePlayer.coordsY) - 15;
+                    bluePlayer.move(document);
                 }
             }
 
             if (e.keyCode === 40) {
-                player2.style.top = parseInt(player2.style.top) + 15 + 'px';
-                if (parseInt(player2.style.top) > 450) {
-                    player2.style.top = 450 + 'px';
+                if (parseInt(bluePlayer.coordsY) > 435) {
+                    bluePlayer.coordsY = 435;
+                } else {
+                    bluePlayer.coordsY = parseInt(bluePlayer.coordsY) + 15;
+                    bluePlayer.move(document);
                 }
             }
+
+
             requestAnimationFrame(down);
         }
 
@@ -181,11 +180,7 @@
 
 
     }
-
-
-    createDOMelement();
-
-
+    createSVGelement();
 
     function start() {
         let random = getRandom();
@@ -203,7 +198,6 @@
         return arr[rand];
     }
 
-
     function restart() {
         let random = getRandom();
         ballObj.speed = ballObj.constSpeed * random;
@@ -213,20 +207,18 @@
 
     function time() {
 
-
-
         let blue = document.querySelector('.bluePlayer');
         let green = document.querySelector('.greenPlayer');
         let ball = document.querySelector('.ball');
         let pointBlue = document.querySelector('[data-BluePoint');
         let pointGreen = document.querySelector('[data-GreenPoint');
 
-        if (ballObj.coordsX >= polygon.width-80 && ballObj.coordsY >= parseInt(blue.style.top) &&
-            ballObj.coordsY <= parseInt(blue.style.top) + bluePlayer.height ) {
+        if (ballObj.coordsX >= polygon.width-60 && ballObj.coordsY >= parseInt(bluePlayer.coordsY) &&
+            ballObj.coordsY <= parseInt(bluePlayer.coordsY) + bluePlayer.height ) {
             ballObj.speedY = -ballObj.speedY;
         }
 
-        if (ballObj.coordsX + ballObj.width > polygon.width) {
+        if (ballObj.coordsX + ballObj.radius > polygon.width) {
 
             greenPlayer.pointsGreen = greenPlayer.pointsGreen+1;
             console.log('Green points:' + greenPlayer.pointsGreen);
@@ -236,12 +228,10 @@
             ballObj.coordsY = ballObj.startY;
             ballObj.speed = 0;
             ballObj.speedY = 0;
-            ball.style.left = ballObj.startX + 'px';
-            ball.style.top = ballObj.startY + 'px';
         }
 
-        if (ballObj.coordsX === 25 && ballObj.coordsY >= parseInt(green.style.top)
-            && ballObj.coordsY <= parseInt(green.style.top) + greenPlayer.height ) {
+        if (ballObj.coordsX === 60 && ballObj.coordsY >= parseInt(greenPlayer.coordsY)
+            && ballObj.coordsY <= parseInt(greenPlayer.coordsY) + greenPlayer.height ) {
             ballObj.speedY = -ballObj.speedY;
         }
 
@@ -254,19 +244,16 @@
             ballObj.coordsY = ballObj.startY;
             ballObj.speed = 0;
             ballObj.speedY = 0;
-            ball.style.left = ballObj.startX + 'px';
-            ball.style.top = ballObj.startY + 'px';
         }
+        console.log(ballObj.coordsY);
 
-
-        if (ballObj.coordsY + ballObj.width > polygon.height) {
+        if (ballObj.coordsY + ballObj.radius  >= polygon.height) {
             ballObj.speed = -ballObj.speed;
         }
 
-        if (ballObj.coordsY  === 0) {
+        if (ballObj.coordsY  === 30) {
             ballObj.speed = -ballObj.speed ;
         }
-
 
         ballObj.move(document);
 
@@ -275,8 +262,3 @@
 
         requestAnimationFrame(time);
     }
-
-
-
-
-

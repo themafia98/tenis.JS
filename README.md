@@ -1,4 +1,4 @@
-# tenis.JS
+# tennis.JS
 Game tenis on Native JS
 
 

@@ -58,11 +58,11 @@
     function buildUI() {
         const container = document.querySelector('.container');
         const canvas = document.getElementsByTagName('canvas');
-        console.log(canvas);
         const input = document.createElement('input');
         const pointBox = document.createElement('div');
         const pointInfo = document.createElement('p');
         const info = document.createElement('p');
+
         input.addEventListener('click',start);
         canvas[0].addEventListener('click', restart);
 
@@ -76,7 +76,6 @@
         input.classList.add('set');
         input.type = 'button';
         input.value = 'START';
-
 
         pointBox.appendChild(pointInfo);
         container.insertBefore(pointBox,canvas[0]);
@@ -139,7 +138,6 @@
                 }
             }
             if (e.ctrlKey) {
-                debugger;
                 if (parseInt( greenPlayer.coordsY) >= 450) {
                     greenPlayer.coordsY = 450;
                 } else {
@@ -208,7 +206,6 @@
 
         if (ballObj.coordsX + ballObj.radius > polygon.width) {
             greenPlayer.pointsGreen = greenPlayer.pointsGreen+1;
-            console.log('Green points:' + greenPlayer.pointsGreen);
             pointGreen.innerHTML = greenPlayer.pointsGreen;
             ballObj.restart();
             ballObj.coordsX =  ballObj.startX;
@@ -224,7 +221,6 @@
 
         if (ballObj.coordsX === 0) {
             bluePlayer.pointsBlue = bluePlayer.pointsBlue+1;
-            console.log('Blue points:' +bluePlayer.pointsBlue);
             pointBlue.innerHTML = bluePlayer.pointsBlue;
             ballObj.restart();
             ballObj.coordsX =  ballObj.startX;

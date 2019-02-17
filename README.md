@@ -1,2 +1,2 @@
 # tenis.JS
-Game tenis on Native JS
+Game tennis on Native JS

@@ -1,0 +1,42 @@
+.container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+
+}
+
+.set {
+    display: block;
+    width: 100px;
+    height: 50px;
+    margin: 10px auto;
+}
+
+.info {
+    font-size: 20px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.goals {
+    width: 100%;
+    height: 30px;
+    margin: 0 auto;
+}
+
+.aboutPoint {
+    font-size: 25px;
+    font-weight: 900;
+    text-align: center;
+}
+
+input {
+    background-color: red;
+    font-weight: 900;
+    border: 1px solid #fff000;
+}
+
+input:disabled {
+    color: black;
+    background-color: green;
+}
